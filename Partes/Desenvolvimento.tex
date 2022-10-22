@@ -1,0 +1,86 @@
+\chapter{\textbf{Desenvolvimento}}
+\section{Construção do Projeto}
+
+\subsection{Como o BOT Funciona (Simplificado)}
+    O Bot Curupira funciona, simplificadamente, da seguinte maneira:
+    (\citeonline{FFNN})
+    \begin{enumerate}
+        \item Um usuário manda alguma mensagem para o número do WhatsApp que o bot usa.
+        
+        \item O bot, usando a API \textit{Selenium WebDriver}, seleciona o contato que possui mensagens não lidas.
+        
+        \item Em seguida, o bot procura pela última mensagem enviada no chat e verifica se ela veio do usuário, ou seja, se a mensagem não é do próprio bot.
+        
+        \item Então, por fim, o bot retira as pontuações da frase, substitui as palavras por pseudônimos definidos no arquivo data.txt, remove palavras que não dão sentidos para a frase e processa a frase em vetores de \textit{Word Embedding}, após isso, ele cria uma vetor único que é a média aritmetica de todos os vetores das palavras reconhecidas.
+        
+        \item Após isso, esse vetor é passado por uma rede neural treinada que vai liberar como \textit{output} (saída) um vetor com o mesmo tamnho que a quantidade de respostas definidas pelo programador.
+        
+        \item Finalmente, o index do maior valor desse vetor é o index da resposta que o bot considera como ''certa''.
+        
+        \item A resposta escolhida pelo bot é enviada ao usuário usando, novamnete, o \textit{Selenium WebDriver}.
+    \end{enumerate}
+
+\subsection{Como usamos o WebDriver}
+    O Google Driver foi essencial para a comunicação pelo \textit{WhatsApp}. No mercado, quase todas as API que fornecem acesso às messagens e interações com \textit{WhatsApp} são pagas ou possuem muitas limitações, então, foi necessário chegarmos numa solução própria. A nossa solução consiste no uso de um WebDriver - são versões do navegador que permitem o controle externo das funções dele, pricipalmente, do código-fonte da página web que está aberta. Com isso, conseguimos acessar o HTML da página do \textit{WhatsApp Web} e clicar e mudar textos de elementos da página.
+    
+    
+    Assim, conseguimos usar CssSelector para encontrar elementos específicos, por exemplo, no Bot Curupira, procuramos por todas as mensagens que estão na tela após selecionar um contato com mensagens não lidas, depois verificamos se a última mensagem não é do próprio bot e respondemos ela se não for do bot. Para responder, pegamos o texto do elemento da última mensagem, passamos para um script em C\# que consiste de uma rede neural treinada que recebe vetores de 100 floats.
+    \citeonline{SleniumWebDriver}
+\section{Base de dados Q\&A}
+    Não usamos um modelo de Questão - Resposta para a AI. Com o poder de Machine Learning podemos processar as perguntas em vetores e passarmos por uma Rede Neural (FFNN) para chegar na resposta com mais chance de ser certa. Usamos um modelo de Questão - Resposta apenas para validar, artificialmente, a taxa de acerto do bot.
+    
+\subsection{Base de Dados de Treinamento e Teste}
+    Todas nossas bases de dados são guardadas localmente em arquivos de texto (.txt). O arquivo onde guarda-se as informações para treino, respostas e pseudônimos deve seguir a seguinte formatação:
+    Baseando-se no uso de ''blocos'' para separar cada informação, devem ser usadas as seguintes tags para começar e terminar blocos:\newline
+    \textbf{[item]} <- início de um bloco\newline
+    \textbf{[*item]} <- final de um bloco\newline
+    \par Para respostas deve-se usar apenas um bloco:\newline
+    \textbf{[Respostas]}\newline
+    ...\newline
+    \textbf{[*Respostas]}
+    \par
+    Para facilitar o uso desse ambiente, pode-se usar o símbolo ''|'' para separar a resposta da numeração dela, a enumeração começa em 1, durante a leitura do arquivo, tudo antes e incluindo o símbolo ''|'' serão ignorados e o número da resposta a partir do início do bloco que será usado para referenciar ela, basta começar enumerando (1, 2, 3, 4...):\newline
+    \textbf{[Respostas]}\newline
+    1|Resposta 1...\newline
+    2|Resposta 2...\newline
+    3|Resposta 3...\newline
+    \textbf{[*Respostas]}
+    \par
+    Para os pseudônimos usa-se a tag ''alias'', os pseudônimos são definidos a partir de uma palavra principal(\#) e outras palavras(\&) que serão substitídas pela palavra principal:\newline
+    \textbf{[Alias]}\newline
+    \#antivírus\newline
+    \&anti-vírus\newline
+    \textbf{[*Alias]}\newline
+    \par
+    Ainda não bem definido e não está em uso é a função do saiba mais. Ela servirá para enviar uma mensagem com um link falando melhor sobre tema abordado na última resposta do bot. Ela será usada quando a resposta do bot não for sufuciente para tirar a dúvida do usuário, ou seja, quando o usuário não entender e falar coisas como: ''não entendi...'', ''como assim?'', ''mais informações'' e etc. 
+    Será passado ao usuário, se existir, o saiba mais definido. A implementação dele é semelhante à implementação das respostas:\newline
+    \textbf{[saiba\_mais]}\newline
+    2|Link\_2...\newline
+    1|Link\_1...\newline
+    3|Link\_3...\newline
+    \textbf{[*saiba\_mais]}
+    \par
+    Agora, partindo para a implementação de dados para treino e verificação de eficiencia.\par
+    Para a implentação de dados de treino usamos a tag ''dados'', nela usamos os símbolos de ''\texttt{@}'' para as palavras chaves, ou seja, palavras que, quando encontradas na frase, trarão o significado daquel tema, lembrando de usar as palavras principais definidas nos pseudônimos para melhor taxa de acerto, você também pode usar o ''\texttt{;}'' para adicionar mais palavras chaves, que serão convertidas todas em um único vetor. O símbolo ''\texttt{=}'' é usado para determinar qual a resposta certa para aquelas palavras chaves definidas, só deve haver um por bloco de dados.\par
+    Ainda não está implementado mas com o uso do sinal ''!'' é possível definir uma opção de saiba mais para o bloco de dados.\newline
+    \textbf{[dados]}\newline
+    @firewal;significado\newline
+    =1\newline
+    !2 (opcional)\newline
+    \textbf{[*dados]}\par
+    Por fim, temos o bloco de teste, é como ele que avaliamos, artificialmente, a eficiência do bot. Para isso definimos apenas UM bloco, dentro dele usamos pa ''@'' definirmos perguntas e ''='' para definirmos a resposta certa. Exemplo:\newline
+    \textbf{[teste]}\newline
+    @o que é firewall?\newline
+    @como funciona o firewall?\newline
+    =4\newline
+    'espaço em branco\newline
+    @o que é um anti virus?\newline
+    =1\newline
+    \textbf{[*teste]}\par
+    Podemos ver que no exemplo acima, foi usado o símbolo de aspas simples, come ele, você pode definir comentários dentro do arquivo, esse comentários serão ignorados durante a leitura do arquivo.
+    
+    
+    
+    
+    
+    

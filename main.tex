@@ -1,0 +1,112 @@
+\documentclass[oneside]{uniaraxatcc} % Para impressão em frente e verso, utilize twoside
+\usepackage{graphicx}
+\usepackage{mathtext}
+\usepackage{listings}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{subcaption}
+\usepackage[utf8]{inputenc}
+\usepackage{multirow}
+\usepackage{scalefnt}
+% \usepackage{wrapfig}
+\usepackage{nomencl}
+\usepackage{lipsum}
+% \usepackage[citestyle=alphabetic,bibstyle=authortitle,sorting=ynt]{biblatex}
+
+\newcommand{\uniaraxa}{\uppercase{UNIARAXÁ}}
+\tipotcc{P} % P:Projeto, M: Monografia
+% Nome do Curso
+\curso{Sistemas de Informação}
+
+%Qual a habilitação do curso? (Bacharel, Tecnólogo ou Licenciado(a))
+\habilitacao{Bacharel}
+
+% Autor(a) do trabalho
+\autor{Daniel, Ryan, Náthan e João César}
+
+% Título do Trabalho
+\titulo{Artefato Sprint 003}
+
+% Local cidade / estado
+\local{Campos Altos}{Minas Gerais}
+
+
+% Data dia / mês / ano da defesa
+\date{14}{Outubro}{2022}
+
+%Define a linha de pesquisa
+% - Cultura, Desenvolvimento Humano e Gestão
+% - Ambiente, Saúde e Políticas Públicas.
+% - Produção, inovação e sustentabilidade.
+\linhadepesquisa{Tecnologia, Conhecimento e Inovação}
+
+% Orientador [Tratamento]{Nome}{Gênero: M para Masculino e F para Feminino}
+\orientador[Prof. Me]{Humberto Gustavo de Melo}{M}
+
+% Membros da banca, podem ser definidos 2 membros de A a B (sendo que o orientador e o co-orientador já  são membros da banca)
+
+% Primeiro membro da banca (Obrigatório)
+%\avaliadorA[Prof. Me.]{Humberto Gustavo de Melo}{M}
+
+% Dedicatória (Opcional)
+%\dedicatoria{\input{Partes/Dedicatoria.tex}}
+
+% Agradecimentos (Opcional)
+%\agradecimentos{\input{Partes/Agradecimentos.tex}}
+
+% Epígrafe (Opcional)
+%\epigrafe{\input{Partes/Epigrafe.tex}}
+
+%Resumo (Obrigatório)
+\resumo{\input{Partes/Resumo.tex}}
+
+% Abstract (Obrigatório)
+%\abstract{\input{Partes/Abstract.tex}}
+
+% Siglas e Abreviações (Opcional)
+%\siglas{\input{Partes/Siglas.tex}}
+
+
+\begin{document}
+\pretextual %Indica início dos elementos pré-textuais
+\maketitle %Elementos Pré-textuais
+\textual %Indica início dos elementos textuais
+%\pagestyle{simple}
+
+%\input{Partes/Tema.tex} %Utilizado somente no Projeto de TCC
+\input{Partes/Logo.tex} 
+\input{Partes/Introducao.tex}
+\input{Partes/Justificativa.tex}
+\input{Partes/Ojetivos.tex}
+%\input{Partes/Hipotese.tex}
+%\input{Partes/Limitacoes.tex}
+%\input{Partes/Estrutura.tex}
+%\input{Partes/Metodologia.tex}
+\input{Partes/TecnologiasUtilizadas.tex}
+\input{Partes/Desenvolvimento.tex}
+\input{Partes/PlanoDeTestes.tex}
+\input{Partes/TrabalhosRelacionados.tex} 
+\input{Partes/Conclusao.tex}
+
+%\input{Partes/Etapas.tex} %Utilizado somente no Projeto de TCC
+%\input{Partes/Cronograma.tex} %Utilizado somente no Projeto de TCC
+
+
+% \postextual %Indica início dos elementos pós-textuais	
+
+\bibliography{Referencias}
+
+
+%\begin{anexosenv}
+% Imprime uma página indicando o início dos anexos
+	%\partanexos
+
+%(opcional)
+%\input{Partes/Anexo.tex} 
+%\end{anexosenv}
+
+
+%(opcional)
+%\input{Partes/Apendice.tex} 
+
+\end{document}
